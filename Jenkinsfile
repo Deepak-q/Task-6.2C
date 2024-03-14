@@ -1,73 +1,81 @@
 pipeline {
-    agent any
-    
-    environment {
-        DIRECTORY_PATH = "/path/to/code"
-        TESTING_ENVIRONMENT = "Deepak Env. "
-        PRODUCTION_ENVIRONMENT = "Deepak Chahal"
-    }
-    
-    stages {
-        stage('Build') {
-            steps {
-                echo "Fetching the source code from the directory path specified by the environment variable: ${env.DIRECTORY_PATH}"
-                echo "Compiling the code and generating any necessary artifacts"
-                    echo "CompilUpdateddd"
-            }
-        }
-        stage('Test') {
-            steps {
-                echo "Running unit tests"
-                echo "Running integration tests"
-                 echo "Updated tests"
-            }
+  agent any
+  environment {
+      DIRECTORY_PATH = "https://github.com/Deepak-q/Task-6.2C.git"
+
+  }
+
+  stages {
+      stage('Build') {
+          steps {
+              echo "Fetching the source code from the directory path specified by ${env.DIRECTORY_PATH}"
+              echo "Built the code using maven"
+          }
+      }
+      stage('Unit and integration tests') {
+          steps {
+              echo "Ran unit and integration tests using Junit"
+          }
          post {
-                
-                success {
-                    emailext  subject: 'Unit Test Status - Success', 
-                              body: 'Unit Test has been completed successfully.', 
-                              to: "deepak4881.be22@chitkara.edu.in",
-                              attachLog: true
-                }
-                failure {
-                    emailext subject: 'Unit Test Status - Failure', 
-                              body: 'Unit Test has failed.', 
-                             to: "deepak4881.be22@chitkara.edu.in",
-                              attachLog: true
-                }
-            }
-        }
-        stage('Code Quality Check') {
-            steps {
-                echo "Checking the quality of the code"
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo "Deploying the application to a testing environment specified by the environment variable: ${env.TESTING_ENVIRONMENT}"
-            }
-        }
-        stage('Approval') {
-            steps {
-                script {
-                    echo "Pausing for manual approval..."
-                    sleep(time: 10, unit: 'SECONDS')
-                }
-            }
-        }
-        stage('Deploy to Production') {
-            steps {
-                echo "Deploying the code to the production environment ${env.PRODUCTION_ENVIRONMENT}"
-            }
-        }
+            success {
+                  emailext  subject: 'Success:Testing Stage', 
+                            body: 'Tests ran successfully', 
+                            to: "deepak4881.be22@chitkara.edu.in",
+                            attachLog: true
+              }
+           failure{
+               emailext  subject: 'Failure:Testing Stage', 
+                            body: 'Failed to run tests', 
+                            to: "deepak4881.be22@chitkara.edu.in",
+                            attachLog: true
+           }
+      }
+           
     }
+      stage('Code Analysis') {
+          steps {
+              echo "check the quality of the code using SonarQube"
+          }
+      }
+     stage('Security Scan') {
+          steps {
+              echo "Performed Security Scan using Synk"
+          }
+        post {
+            success {
+                  emailext  subject: 'Success:Security Scan', 
+                            body: 'Security scan was successful', 
+                            to: "deepak4881.be22@chitkara.edu.in",
+                            attachLog: true
+              }
+           failure{
+               emailext  subject: 'Failure:Security Scan', 
+                            body: 'Failed while scanning for the security', 
+                            to: "deepak4881.be22@chitkara.edu.in",
+                            attachLog: true
+           }
+      }
+      }
+      stage('Deploy to Staging') {
+          steps {
+              echo "Deployed to Staging Server (AWS EC2)"
+          }
+          
+    }
+      stage('Integration tests on Staging') {
+          steps {
+              echo "Ran Integration Tests using Apache Camel tool"
+              echo "Updated code"
+          }
+      }
+    stage('Deploy to Production'){
+      steps{
+        echo "Application deployed to production server (AWS EC2 instance)"
+        
+      }
+      
+    }
+       
     
-    post {
-        success {
-            echo 'Pipeline succeeded! Deployed successfully to production.'
-        }
-        failure {
-            echo 'Pipeline failed. Deployment to production unsuccessful.'
-        }
-    }
+  }
 }
