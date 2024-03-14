@@ -19,6 +19,7 @@ pipeline {
             steps {
                 echo "Running unit tests"
                 echo "Running integration tests"
+                 echo "Updated tests"
             }
          post {
                 
