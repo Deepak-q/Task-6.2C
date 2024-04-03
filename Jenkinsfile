@@ -11,6 +11,7 @@ pipeline {
               echo "Fetching the source code from the directory path specified by ${env.DIRECTORY_PATH}"
               echo "Built the code using maven"
             echo "Updated the code"
+            echo"deepak"
           }
       }
       stage('Unit and integration tests') {
